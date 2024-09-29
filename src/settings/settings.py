@@ -6,11 +6,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class DatabaseSettings(BaseSettings):
     """Настройки бд"""
-    user: str = "postgres"
-    password: str = "admin"
-    host: str = "localhost"
-    port: str = "5432"
-    name: str = "postgres"
+    user: str
+    password: str
+    host: str
+    port: str
+    name: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

@@ -7,6 +7,18 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.115.0"}
+sqlalchemy = "^2.0.35"
+asyncpg = "^0.29.0"
+psycopg2-binary = "^2.9.9"
+loguru = "^0.7.2"
+pydantic-settings = "^2.5.2"
+alembic = "^1.13.3"
+email-validator = "^2.2.0"
+aiofiles = "^24.1.0"
+passlib = "^1.7.4"
+python-jose = "^3.3.0"
+bcrypt = "^4.2.0"
 
 
 [build-system]

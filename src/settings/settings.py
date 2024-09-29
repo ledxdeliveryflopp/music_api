@@ -29,15 +29,25 @@ class JwtTokenSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
+class APISettings(BaseSettings):
+
+    host: str
+    port: int
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+
 class AllSettings(BaseSettings):
     database_settings: DatabaseSettings
     jwt_settings: JwtTokenSettings
+    api_settings: APISettings
 
 
 @lru_cache()
 def init_settings():
     """Инициализация настроек"""
-    all_settings = AllSettings(database_settings=DatabaseSettings(), jwt_settings=JwtTokenSettings())
+    all_settings = AllSettings(database_settings=DatabaseSettings(),
+                               jwt_settings=JwtTokenSettings(), api_settings=APISettings())
     return all_settings
 
 

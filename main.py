@@ -5,6 +5,7 @@ from starlette.staticfiles import StaticFiles
 
 from src.authorization.router import authorization_router
 from src.registration.router import registration_router
+from src.settings.settings import settings
 from src.user.router import user_router
 
 app = FastAPI()
@@ -26,4 +27,4 @@ if __name__ == "__main__":
     logger.add("application.log", rotation="100 MB",
                format="{time:DD-MM-YYYY at HH:mm:ss} | {level} | {message}")
     logger.info("application started")
-    run_app("127.0.0.1", 7000)
+    run_app(settings.api_settings.host, settings.api_settings.port)

@@ -27,4 +27,4 @@ if __name__ == "__main__":
     logger.add("application.log", rotation="100 MB",
                format="{time:DD-MM-YYYY at HH:mm:ss} | {level} | {message}")
     logger.info("application started")
-    run_app(settings.api_settings.host, settings.api_settings.port)
+    run_app(settings.api_settings.api_host, settings.api_settings.api_port)

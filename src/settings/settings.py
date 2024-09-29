@@ -31,8 +31,8 @@ class JwtTokenSettings(BaseSettings):
 
 class APISettings(BaseSettings):
 
-    host: str
-    port: int
+    api_host: str
+    api_port: int
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

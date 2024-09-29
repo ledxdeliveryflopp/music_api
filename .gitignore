@@ -165,6 +165,5 @@ cython_debug/
 application.log
 fastapi.log
 
-# static
-static/avatars/default.png
+
 

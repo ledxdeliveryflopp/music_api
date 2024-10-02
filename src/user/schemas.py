@@ -15,3 +15,8 @@ class UserCreateSchemas(UserBaseSchemas):
 class UserSchemas(UserBaseSchemas):
     """Схема профиля пользователя"""
     avatar_url: str
+
+
+class UserShortAuthorSchemas(BaseModel):
+    """Модель минимальной информации о авторе"""
+    username: str

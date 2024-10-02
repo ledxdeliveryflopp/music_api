@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from src.authorization.router import authorization_router
+from src.music.router import music_router
 from src.registration.router import registration_router
 from src.settings.settings import settings
 from src.user.router import user_router
@@ -15,6 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(user_router)
 app.include_router(registration_router)
 app.include_router(authorization_router)
+app.include_router(music_router)
 
 
 @logger.catch

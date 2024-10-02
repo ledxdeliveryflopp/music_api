@@ -29,7 +29,6 @@ class UserRepository(BaseService):
 
     @staticmethod
     async def add_image(request: Request, avatar:  File()):
-        print(avatar.filename)
         async with aiofiles.open(f"static/avatars/{avatar.filename}", "wb+") as file:
             avatar_data = await avatar.read()
             await file.write(avatar_data)

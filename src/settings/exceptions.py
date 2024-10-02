@@ -22,6 +22,18 @@ class UserDontExist(DetailedHTTPException):
     detail = "Пользователя не существует."
 
 
+class MusicSaveError(DetailedHTTPException):
+    """Ошибка при сохранении музыки"""
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Ошибка при сохранении музыки."
+
+
+class MusicDontExist(DetailedHTTPException):
+    """Музыки ге существует"""
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Такого трека не существует."
+
+
 class BadCredentials(DetailedHTTPException):
     """Не верная почта или пароль"""
     status_code = status.HTTP_400_BAD_REQUEST

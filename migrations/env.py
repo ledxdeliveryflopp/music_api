@@ -24,6 +24,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from src.user.models import UserModel  #noqa
 from src.authorization.models import TokenModel  #noqa
+from src.music.models import MusicModel  #noqa
 
 target_metadata = Base.metadata
 

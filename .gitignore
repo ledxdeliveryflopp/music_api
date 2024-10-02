@@ -165,4 +165,5 @@ application.log
 fastapi.log
 
 
+# alembic
 

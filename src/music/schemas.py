@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from src.user.schemas import UserShortAuthorSchemas
-
 
 class MusicBaseSchemas(BaseModel):
     """Стандартная схема музыки"""
@@ -14,6 +12,11 @@ class MusicCreateSchemas(BaseModel):
     authors: list
 
 
+class UserShortAuthorSchemas(BaseModel):
+    """Модель минимальной информации о авторе"""
+    username: str
+
+
 class MusicResponseSchemasNoFile(BaseModel):
     id: int
     owner: UserShortAuthorSchemas
@@ -24,6 +27,7 @@ class MusicResponseSchemas(MusicBaseSchemas):
     id: int
     owner: UserShortAuthorSchemas
     authors: list
+    cover_url: str
     file_url: str
     duration: float
 

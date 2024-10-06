@@ -28,10 +28,22 @@ class MusicService(MusicRepository):
         """Загрузка музыки"""
         return await self._repository_upload_music_file(music_id, request, music_file)
 
+    async def service_upload_music_cover(self, music_id: int, request: Request,
+                                         cover_file: File()) -> MusicModel:
+        """Загрузка обложки"""
+        return await self._repository_upload_music_cover(music_id, request, cover_file)
+
     async def service_find_music_by_id(self, music_id: int):
         music = await self._repository_find_music_by_id(music_id)
         if not music:
             raise MusicDontExist
+        return music
+
+    async def service_find_music_by_author_or_title(self, author_username: str,
+                                                    music_title: str) -> MusicModel:
+        music = await self._repository_find_music_by_author_or_title(author_username, music_title)
+        if not music:
+            return None
         return music
 
     async def service_stream_music(self, music_id: int):
@@ -42,6 +54,9 @@ class MusicService(MusicRepository):
             data = await file.read()
             decoded_data = base64.b64decode(data)
             yield decoded_data
+
+    async def service_add_music_in_user_favorite(self, user_id: int, music_id: int):
+        return await self._repository_add_music_in_user_favorite(user_id, music_id)
 
 
 async def init_music_service(session: AsyncSession = Depends(get_session)) -> MusicService:

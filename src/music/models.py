@@ -9,6 +9,7 @@ class MusicModel(BaseModel):
     __tablename__ = "music"
     title = Column(String, nullable=True, unique=False)
     file_url = Column(String, nullable=True, unique=True)
+    cover_url = Column(String, nullable=True, unique=True)
     file_static_path = Column(String, nullable=True, unique=True)
     duration = Column(Float, nullable=True, unique=False)
     authors = Column(ARRAY(String), nullable=False, unique=False)

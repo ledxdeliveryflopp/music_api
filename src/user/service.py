@@ -15,13 +15,11 @@ from src.user.repository import UserRepository
 class UserService(UserRepository):
     """Сервис пользователей"""
 
-    @logger.catch
     async def _service_find_user_by_email(self, email: str) -> UserModel | None:
         """Поиск пользователя по email"""
         user = await self._repository_find_user_by_email(email)
         return user
 
-    @logger.catch
     async def service_find_users_by_username(self, username: str) -> UserModel | HTTPException:
         """Поиск пользователя по email"""
         user = await self._repository_find_users_by_username(username)

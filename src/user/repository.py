@@ -15,11 +15,13 @@ from src.user.models import UserModel
 class UserRepository(BaseService):
     """Репозиторий пользователей"""
 
+    @logger.catch
     async def _repository_find_user_by_email(self, email: str) -> UserModel | None:
         """Поиск пользователя по email"""
         user = await self.session.execute(Select(UserModel).where(UserModel.email == email))
         return user.scalar()
 
+    @logger.catch
     async def _repository_find_users_by_username(self, username: str) -> UserModel | HTTPException:
         """Поиск пользователя по email"""
         user = await self.session.execute(Select(UserModel).where(UserModel.username == username))

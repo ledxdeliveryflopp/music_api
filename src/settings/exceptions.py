@@ -13,40 +13,40 @@ class DetailedHTTPException(HTTPException):
 class UserAlreadyExist(DetailedHTTPException):
     """Пользователь уже существует"""
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "Пользователь с таким email существует."
+    detail = "User with this email does exist."
 
 
 class UserDontExist(DetailedHTTPException):
     """Пользователя не существует"""
     status_code = status.HTTP_404_NOT_FOUND
-    detail = "Пользователя не существует."
+    detail = "User dont exist."
 
 
 class MusicSaveError(DetailedHTTPException):
     """Ошибка при сохранении музыки"""
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "Ошибка при сохранении музыки."
+    detail = "Error while save music."
 
 
 class MusicDontExist(DetailedHTTPException):
     """Музыки ге существует"""
     status_code = status.HTTP_404_NOT_FOUND
-    detail = "Такого трека не существует."
+    detail = "Author or track dont exist."
 
 
 class BadCredentials(DetailedHTTPException):
     """Не верная почта или пароль"""
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "Не верная почта или пароль."
+    detail = "Bad email or password."
 
 
 class DatabaseSaveError(DetailedHTTPException):
     """Исключение при сохранении в БД"""
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "Ошибка сохранения."
+    detail = "Save error."
 
 
 class DatabaseDeleteError(DetailedHTTPException):
     """Исключение при удалении из БД"""
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "Ошибка удаления."
+    detail = "Delete error."

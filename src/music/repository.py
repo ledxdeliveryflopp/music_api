@@ -9,6 +9,7 @@ from mutagen.mp3 import MP3
 from sqlalchemy import Select, or_
 from starlette.requests import Request
 
+from src.authorization.utils import decode_token_data
 from src.music.models import MusicModel
 from src.music.schemas import MusicCreateSchemas
 from src.settings.exceptions import MusicSaveError, MusicDontExist, UserDontExist
@@ -29,7 +30,33 @@ class MusicRepository(BaseService):
     async def _repository_find_music_by_id(self, id: int) -> MusicModel:
         """Поиск музыки по id"""
         music = await self.session.execute(Select(MusicModel).where(MusicModel.id == id))
+        if not music:
+            raise MusicDontExist
         return music.scalar()
+
+    async def _repository_find_music_by_title(self, title: int) -> MusicModel:
+        """Поиск музыки по названию"""
+        music = await self.session.execute(Select(MusicModel).where(MusicModel.title == title))
+        if not music:
+            raise MusicDontExist
+        return music.scalar()
+
+    async def _repository_play_music_by_title(self, title: str) -> MusicModel:
+        """проигрывание музыки по названию"""
+        music = await self._repository_find_music_by_title(title)
+        if not music:
+            raise MusicDontExist
+        music.play_numbers += 1
+        logger.info(f"play music num - {music.play_numbers}")
+        await self.service_save_object(music)
+        return music
+
+    async def _repository_sort_music_by_play_count(self) -> MusicModel:
+        """Сортировка мызыки по колличеству прослушиваний"""
+        music = await self.session.execute(Select(MusicModel).order_by(MusicModel.play_numbers.desc()))
+        if not music:
+            raise MusicDontExist
+        return music.scalars().all()
 
     async def _repository_find_music_by_author_or_title(self, author_username: str,
                                                         music_title: str) -> MusicModel:
@@ -38,15 +65,21 @@ class MusicRepository(BaseService):
             UserModel.username == author_username, MusicModel.title == music_title)))
         return music.scalars().all()
 
-    async def _repository_upload_music(self, schemas: MusicCreateSchemas) -> MusicModel:
+    async def _repository_upload_music(self, request: Request,
+                                       schemas: MusicCreateSchemas) -> MusicModel:
+        header_token = request.headers.get('Authorization')
+        token = header_token.replace("Bearer ", "")
+        token_data = await decode_token_data(token)
+        user_id = token_data.get("user_id")
         """Загрузка музыки"""
-        user = await self.__find_user(schemas.owner_id)
+        user = await self.__find_user(user_id)
         if not user:
             raise UserDontExist
         authors_list: list = [user.username]
         for i in schemas.authors:
             authors_list.append(i)
-        new_music = MusicModel(owner_id=schemas.owner_id,  authors=authors_list)
+
+        new_music = MusicModel(owner_id=user_id,  authors=authors_list)
         await self.service_save_object(new_music)
         return new_music
 
@@ -70,7 +103,7 @@ class MusicRepository(BaseService):
             cover_url = str(cover_url)
             music.cover_url = cover_url
             await self.service_save_object(music)
-            return music
+            return {"detail": "success"}
         except Exception as exc:
             path = os.path.exists(f"static/music/cover/{cover_file.filename}")
             if path is True:
@@ -105,8 +138,7 @@ class MusicRepository(BaseService):
             music.duration = duration
             music.file_static_path = f"static/music/{music_file.filename}"
             await self.service_save_object(music)
-
-            return music
+            return {"detail": "success"}
         except Exception as exc:
             path = os.path.exists(f"static/music/{music_file.filename}")
             if path is True:

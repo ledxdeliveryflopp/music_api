@@ -8,7 +8,6 @@ class MusicBaseSchemas(BaseModel):
 
 class MusicCreateSchemas(BaseModel):
     """Схема создания музыки"""
-    owner_id: int
     authors: list
 
 
@@ -30,4 +29,5 @@ class MusicResponseSchemas(MusicBaseSchemas):
     cover_url: str
     file_url: str
     duration: float
+    play_numbers: int
 

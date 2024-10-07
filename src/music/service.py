@@ -19,9 +19,10 @@ from src.settings.exceptions import MusicDontExist
 class MusicService(MusicRepository):
     """Сервис музыки"""
 
-    async def service_upload_music(self, schemas: MusicCreateSchemas) -> MusicModel:
+    async def service_upload_music(self, request: Request,
+                                   schemas: MusicCreateSchemas) -> MusicModel:
         """Загрузка музыки"""
-        return await self._repository_upload_music(schemas)
+        return await self._repository_upload_music(request, schemas)
 
     async def service_upload_music_file(self, music_id: int, request: Request,
                                         music_file: File()) -> MusicModel:
@@ -33,8 +34,23 @@ class MusicService(MusicRepository):
         """Загрузка обложки"""
         return await self._repository_upload_music_cover(music_id, request, cover_file)
 
-    async def service_find_music_by_id(self, music_id: int):
+    async def service_find_music_by_id(self, music_id: int) -> MusicModel:
+        """Поиск музыки по id"""
         music = await self._repository_find_music_by_id(music_id)
+        if not music:
+            raise MusicDontExist
+        return music
+
+    async def service_sort_music_by_play_count(self) -> MusicModel:
+        """Сортировка музыки по колличеству прослушиваний"""
+        music = await self._repository_sort_music_by_play_count()
+        if not music:
+            raise MusicDontExist
+        return music
+
+    async def service_play_music_by_title(self, title: str) -> MusicModel:
+        """проигрывание музыки по id"""
+        music = await self._repository_play_music_by_title(title)
         if not music:
             raise MusicDontExist
         return music
@@ -43,7 +59,7 @@ class MusicService(MusicRepository):
                                                     music_title: str) -> MusicModel:
         music = await self._repository_find_music_by_author_or_title(author_username, music_title)
         if not music:
-            return None
+            raise MusicDontExist
         return music
 
     async def service_stream_music(self, music_id: int):

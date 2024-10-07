@@ -13,6 +13,7 @@ class MusicModel(BaseModel):
     file_static_path = Column(String, nullable=True, unique=True)
     duration = Column(Float, nullable=True, unique=False)
     authors = Column(ARRAY(String), nullable=False, unique=False)
+    play_numbers = Column(Integer(), default=0, nullable=True, unique=False)
     owner_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False,
                       unique=False)
 

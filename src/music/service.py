@@ -3,8 +3,6 @@ from dataclasses import dataclass
 
 import aiofiles
 from fastapi import File, Depends
-from loguru import logger
-from mutagen.mp3 import MP3
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
 
@@ -48,9 +46,9 @@ class MusicService(MusicRepository):
             raise MusicDontExist
         return music
 
-    async def service_play_music_by_title(self, title: str) -> MusicModel:
+    async def service_play_music_by_id(self, music_id: int) -> MusicModel:
         """проигрывание музыки по id"""
-        music = await self._repository_play_music_by_title(title)
+        music = await self._repository_play_music_by_id(music_id)
         if not music:
             raise MusicDontExist
         return music

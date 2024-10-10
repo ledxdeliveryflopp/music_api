@@ -57,10 +57,10 @@ async def router_find_music_by_author_or_title(author_username: str | None = Non
 
 
 @music_router.get("/play_music/", response_model=MusicResponseSchemas)
-async def router_play_music_by_title(title: str,
-                                     service: MusicService = Depends(init_music_service)):
+async def router_play_music_by_id(music_id: int,
+                                  service: MusicService = Depends(init_music_service)):
     """Роутер проигрывания музыки по id"""
-    return await service.service_play_music_by_title(title)
+    return await service.service_play_music_by_id(music_id)
 
 
 @music_router.get("/stream_music/")

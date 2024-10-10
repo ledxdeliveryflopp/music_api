@@ -41,9 +41,9 @@ class MusicRepository(BaseService):
             raise MusicDontExist
         return music.scalar()
 
-    async def _repository_play_music_by_title(self, title: str) -> MusicModel:
-        """проигрывание музыки по названию"""
-        music = await self._repository_find_music_by_title(title)
+    async def _repository_play_music_by_id(self, music_id: int) -> MusicModel:
+        """проигрывание музыки по id"""
+        music = await self._repository_find_music_by_id(music_id)
         if not music:
             raise MusicDontExist
         music.play_numbers += 1

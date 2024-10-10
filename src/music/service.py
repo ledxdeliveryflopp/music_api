@@ -46,9 +46,9 @@ class MusicService(MusicRepository):
             raise MusicDontExist
         return music
 
-    async def service_play_music_by_id(self, music_id: int) -> MusicModel:
+    async def service_play_music_by_id(self, music_id: int, request: Request,) -> MusicModel:
         """проигрывание музыки по id"""
-        music = await self._repository_play_music_by_id(music_id)
+        music = await self._repository_play_music_by_id(request, music_id)
         if not music:
             raise MusicDontExist
         return music

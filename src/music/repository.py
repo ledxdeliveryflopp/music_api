@@ -11,10 +11,11 @@ from sqlalchemy import Select, or_
 from sqlalchemy.sql.operators import ilike_op
 from starlette.requests import Request
 
+from src.authorization.models import TokenModel
 from src.authorization.utils import decode_token_data
 from src.music.models import MusicModel
 from src.music.schemas import MusicCreateSchemas
-from src.settings.exceptions import MusicSaveError, MusicDontExist, UserDontExist
+from src.settings.exceptions import MusicSaveError, MusicDontExist, UserDontExist, TokenException
 from src.settings.service import BaseService
 from src.user.models import UserModel
 
@@ -42,8 +43,17 @@ class MusicRepository(BaseService):
             raise MusicDontExist
         return music.scalar()
 
-    async def _repository_play_music_by_id(self, music_id: int) -> MusicModel:
+    async def __find_token(self, token):
+        token = await self.session.execute(Select(TokenModel).where(TokenModel.token == token))
+        return token.scalar()
+
+    async def _repository_play_music_by_id(self, music_id: int, request: Request) -> MusicModel:
         """проигрывание музыки по id"""
+        header_token = request.headers.get('Authorization')
+        data = header_token.replace("Bearer ", "")
+        token = await self.__find_token(data)
+        if not token:
+            raise TokenException
         music = await self._repository_find_music_by_id(music_id)
         if not music:
             raise MusicDontExist
@@ -74,6 +84,8 @@ class MusicRepository(BaseService):
         header_token = request.headers.get('Authorization')
         token = header_token.replace("Bearer ", "")
         token_data = await decode_token_data(token)
+        if not token_data:
+            raise TokenException
         user_id = token_data.get("user_id")
         """Загрузка музыки"""
         user = await self.__find_user(user_id)

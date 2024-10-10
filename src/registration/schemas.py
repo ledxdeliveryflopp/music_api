@@ -3,7 +3,7 @@ from pydantic import Field, EmailStr, BaseModel
 
 class UserBaseSchemas(BaseModel):
     """Стандартная схема пользователя"""
-    username: str = Field(min_length=4, max_length=16)
+    username: str = Field(min_length=4, max_length=64)
     email: EmailStr
 
 

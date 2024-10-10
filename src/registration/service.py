@@ -5,10 +5,11 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.registration.repository import RegistrationRepository
+from src.registration.schemas import UserCreateSchemas
 from src.settings.database import get_session
 from src.settings.exceptions import UserAlreadyExist
 from src.user.models import UserModel
-from src.user.schemas import UserCreateSchemas
+
 
 
 @dataclass

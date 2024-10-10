@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 
+from src.registration.schemas import UserCreateSchemas, UserBaseSchemas
 from src.registration.service import RegistrationService, init_registration_service
-from src.registration.schemas import UserBaseSchemas, UserCreateSchemas
+
 
 registration_router = APIRouter(prefix="/registration", tags=["auth"])
 

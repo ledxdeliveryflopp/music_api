@@ -7,7 +7,7 @@ from src.settings.models import BaseModel
 class UserModel(BaseModel):
     """Модель пользователя"""
     __tablename__ = "user"
-    username = Column(String(length=16), unique=False, nullable=False)
+    username = Column(String(length=64), unique=False, nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)
     password = Column(String(length=255), unique=False, nullable=False)
     favorite_playlist = Column(ARRAY(Integer), unique=False, nullable=True)

@@ -2,10 +2,11 @@ from dataclasses import dataclass
 
 from sqlalchemy import Select
 
+from src.registration.schemas import UserCreateSchemas
 from src.registration.utils import hash_password
 from src.settings.service import BaseService
 from src.user.models import UserModel
-from src.user.schemas import UserCreateSchemas
+
 
 
 @dataclass

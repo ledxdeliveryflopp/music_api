@@ -7,6 +7,7 @@ from fastapi import File
 from loguru import logger
 from mutagen.mp3 import MP3
 from sqlalchemy import Select, or_
+from sqlalchemy.sql.operators import ilike_op
 from starlette.requests import Request
 
 from src.authorization.utils import decode_token_data
@@ -61,8 +62,11 @@ class MusicRepository(BaseService):
     async def _repository_find_music_by_author_or_title(self, author_username: str,
                                                         music_title: str) -> MusicModel:
         """Поиск музыки по username автора или названию песни"""
-        music = await self.session.execute(Select(MusicModel).join(UserModel.musics).where(or_(
-            UserModel.username == author_username, MusicModel.title == music_title)))
+        music = await self.session.execute(Select(MusicModel).join(UserModel.musics)
+                                           .where(or_(ilike_op(MusicModel.title,
+                                                               f"{music_title}%"),
+                                                      ilike_op(UserModel.username,
+                                                               f"{author_username}%"))))
         return music.scalars().all()
 
     async def _repository_upload_music(self, request: Request,

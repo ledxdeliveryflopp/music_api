@@ -3,6 +3,7 @@ import os
 from dataclasses import dataclass
 
 import aiofiles
+from PIL import Image
 from fastapi import File
 from loguru import logger
 from mutagen.mp3 import MP3
@@ -14,7 +15,6 @@ from src.authorization.utils import decode_token_data
 from src.music.models import MusicModel
 from src.music.schemas import MusicCreateSchemas
 from src.settings.exceptions import MusicSaveError, MusicDontExist, UserDontExist
-from src.settings.models import BaseModel
 from src.settings.service import BaseService
 from src.user.models import UserModel
 
@@ -83,7 +83,7 @@ class MusicRepository(BaseService):
         for i in schemas.authors:
             authors_list.append(i)
 
-        new_music = MusicModel(owner_id=user_id,  authors=authors_list)
+        new_music = MusicModel(owner_id=user_id, authors=authors_list)
         await self.service_save_object(new_music)
         return new_music
 
@@ -100,9 +100,13 @@ class MusicRepository(BaseService):
             raise MusicDontExist
         try:
             filename = cover_file.filename.replace(" ", "-")
-            async with aiofiles.open(f"static/music/cover/{filename}", "wb+") as file:
+            async with aiofiles.open(f"static/music/cover/temp/{filename}", "wb+") as file:
                 cover_data = await cover_file.read()
                 await file.write(cover_data)
+            with Image.open(f"static/music/cover/temp/{filename}", "r") as resized_file:
+                resized_cover = resized_file.resize((50, 50))
+                resized_cover.save(f"static/music/cover/{filename}")
+                os.remove(f"static/music/cover/temp/{filename}")
             cover_url = request.url_for("static", path=f"music/cover/{filename}")
             cover_url = str(cover_url)
             music.cover_url = cover_url
@@ -132,7 +136,8 @@ class MusicRepository(BaseService):
                 base64_encoded_data = base64.b64encode(music_data)
                 await file.write(base64_encoded_data)
                 await decoded_file.write(stored__data)
-                duration = await self._repository_get_music_duration(f"static/music/temp/{music_id}.mp3")
+                duration = await self._repository_get_music_duration(
+                    f"static/music/temp/{music_id}.mp3")
             os.remove(f"static/music/temp/{music_id}.mp3")
             music_url = request.url_for("static", path=f"music/{filename}")
             music_url = str(music_url)

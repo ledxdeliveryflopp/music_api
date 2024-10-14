@@ -54,5 +54,5 @@ class DatabaseDeleteError(DetailedHTTPException):
 
 class TokenException(DetailedHTTPException):
     """Ошибка работы с токеном"""
-    status = status.HTTP_400_BAD_REQUEST
+    status_code = status.HTTP_400_BAD_REQUEST
     detail = "Token error."

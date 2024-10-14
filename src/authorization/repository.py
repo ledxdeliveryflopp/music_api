@@ -15,6 +15,11 @@ from src.user.models import UserModel
 class AuthorizationRepository(BaseService):
     """Репозиторий jwt токенов"""
 
+    async def _repository_find_token(self, token: str) -> TokenModel | None:
+        """Поиск токена"""
+        jwt_token = await self.session.execute(Select(TokenModel).where(TokenModel.token == token))
+        return jwt_token.scalar()
+
     async def _repository_find_user_by_email(self, email: str) -> UserModel | None:
         """Поиск пользователя по email"""
         user = await self.session.execute(Select(UserModel).where(UserModel.email == email))

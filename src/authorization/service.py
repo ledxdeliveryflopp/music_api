@@ -7,12 +7,19 @@ from src.authorization.repository import AuthorizationRepository
 from src.authorization.schemas import LoginSchemas
 from src.authorization.utils import verify_password
 from src.settings.database import get_session
-from src.settings.exceptions import UserDontExist, BadCredentials
+from src.settings.exceptions import UserDontExist, BadCredentials, TokenException
 
 
 @dataclass
 class AuthorizationService(AuthorizationRepository):
     """Сервис авторизации"""
+
+    async def service_check_token(self, token: str) -> dict | HTTPException:
+        """Проверка токена"""
+        jwt_token = await self._repository_find_token(token)
+        if not jwt_token:
+            raise TokenException
+        return {"detail": True}
 
     async def service_login(self, schemas: LoginSchemas) -> dict | HTTPException:
         """Авторизация"""
